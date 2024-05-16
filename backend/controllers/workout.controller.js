@@ -45,22 +45,27 @@ const PostWorkout = async (req, res) => {
 
 //delete aa workout
 const deleteWorkout = async (req, res) => { 
-    try {
-        const { id } = req.params;
+  try {
+      const { id } = req.params;
 
-        if(!mongoose.Types.ObjectId.isValid(id)) {
-         return res.status(404).json({message: "no such workout"})
-        }
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+          return res.status(404).json({ message: "Invalid workout ID" });
+      }
 
-        const deleteWorkout = await Workout.findOneAndDelete({_id: id})
-        if(!deleteWorkout){
-            return res.status(404).json({message: "no such workout"})
-        }
-        res.json({message:"workout deleted " , deleteWorkout})
-    } catch (error) {
-        console.log(error.message);
-    }
-}
+      const deletedWorkout = await Workout.findOneAndDelete({ _id: id });
+
+      if (!deletedWorkout) {
+          return res.status(404).json({ message: "Workout not found" });
+      }
+
+      res.json({ message: "Workout deleted", deletedWorkout });
+  } catch (error) {
+      console.error("Error deleting workout:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
 
 //update a workout
 const updateWorkout = async (req, res) => { 

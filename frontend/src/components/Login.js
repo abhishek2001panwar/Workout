@@ -31,7 +31,7 @@ function Login() {
 
   return (
     <div className="flex h-screen bg-zinc-200 items-center justify-center">
-      <div className="bg-white p-10 rounded shadow-md w-100">
+      <div className="bg-white p-5 md:p-10 rounded shadow-md w-100">
         <h2 className="text-2xl mb-4 font-semibold text-center font-mono ">Login</h2>
         {error && <p className="text-red-500 text-center">{error}</p>}
         <form onSubmit={handleSubmit}>

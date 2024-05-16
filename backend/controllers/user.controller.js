@@ -9,12 +9,8 @@ const registerUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.signup(email, password);
-
-    // create a token
     const token = createtoken(user.id);
-
-    console.log(user);
-    res.sendStatus(200).json({
+    res.status(200).json({
       message: "User registered successfully",
       user,
       token,
@@ -23,45 +19,41 @@ const registerUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Failed to register user",
-      error: error.message, // Send error message for debugging purposes
+      error: error.message,
     });
   }
 };
-//login controllers
+
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
     const token = createtoken(user.id);
-    console.log(user);
-    res.sendStatus(200).json({
+    res.status(200).json({
       message: "User login successful",
-
       token,
       email,
     });
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({
+      message: "Failed to login user",
+      error: error.message,
+    });
   }
-
-  res.send(200).json({
-    message: "User login successful",
-  });
 };
 
 const logoutUser = (req, res) => {
-  // Clear the token cookie by setting it with an empty value and an expiration date in the past
-  res.cookie("token", "", {
-    expires: new Date(Date.now() - 1000),
-    httpOnly: true, // Make the cookie accessible only via HTTP(S)
-  });
-
-  // Send a 200 status code along with a JSON response indicating successful logout
-  res.status(200).json({
-    message: "User logout successful",
-  });
+  try {
+    res.clearCookie("token", { path: "/" }); // Clear the token cookie
+    res.status(200).json({
+      message: "User logout successful",
+    });
+  } catch (error) {
+    console.error("Error logging out:", error);
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
 };
 
-
-
-export { registerUser, loginUser ,logoutUser };
+export { registerUser, loginUser, logoutUser };

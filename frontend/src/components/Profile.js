@@ -7,7 +7,8 @@ function Profile() {
     const fetchUserData = async (id) => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("/api/user/signup", {
+        const response = await fetch("/api/user/login", {
+          method:"POST",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -35,29 +36,21 @@ function Profile() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 {/* Assuming user profile picture is available in user data */}
-                <img
-                  src={user.profilePicture}
-                  alt="Profile"
-                  className="w-16 h-16 rounded-full"
-                />
+                
               </div>
               <div>
                 <button className="text-teal-500 bg-white hover:bg-teal-100 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-4 py-2.5">Follow</button>
               </div>
             </div>
-            <p className="text-lg font-semibold leading-none">{user.name}</p>
             <p className="mb-2 text-sm font-normal">{user.email}</p>
-            <p className="mb-4 text-sm">{user.bio}</p>
             <div className="flex text-sm">
               <div className="me-4">
                 <a href="#" className="text-teal-200 hover:text-white">
-                  <span className="font-semibold">{user.following}</span>
                   <span className="block">Following</span>
                 </a>
               </div>
               <div>
                 <a href="#" className="text-teal-200 hover:text-white">
-                  <span className="font-semibold">{user.followers}</span>
                   <span className="block">Followers</span>
                 </a>
               </div>

@@ -22,7 +22,11 @@ function Home() {
         const response = await fetch("/api/workout");
         if (response.ok) {
           const json = await response.json();
-          setWorkout((prevWorkout) => [...prevWorkout, ...json]);
+          // Filter out any workouts that are already in state
+          const newWorkouts = json.filter(newWorkout =>
+            !workout.some(existingWorkout => existingWorkout.id === newWorkout.id)
+          );
+          setWorkout(prevWorkout => [...prevWorkout, ...newWorkouts]);
         } else {
           console.log("Failed to fetch workout data");
         }
@@ -32,21 +36,23 @@ function Home() {
     };
     fetchWorkout();
   }, []);
-
   // Remove workout from state and update local storage
   const removeWorkout = (indexToRemove) => {
-    setWorkout((prevWorkout) =>
-      prevWorkout.filter((_, index) => index !== indexToRemove)
+    const updatedWorkout = workout.filter(
+      (_, index) => index !== indexToRemove
     );
+    setWorkout(updatedWorkout);
+    localStorage.setItem("workout", JSON.stringify(updatedWorkout));
   };
 
   return (
-    <div className="w-[65%] p-10">
+    <div className=" w-[90%]  md:w-[50%] p-5 md:p-10">
       {workout.map((workout, index) => (
         <WorkoutCom
           workout={workout}
-          key={index}
-          onRemove={() => removeWorkout(index)}
+          index={index}
+          removeWorkout={() => removeWorkout(index)} // Pass removeWorkout function correctly
+          key={index} // Ensure to provide a unique key
         />
       ))}
     </div>

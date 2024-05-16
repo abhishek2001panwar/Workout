@@ -7,5 +7,5 @@ router.post('/signup', registerUser )
 //login route
 
 router.post('/login', loginUser )
-router.get('logout', logoutUser)
+router.get('/logout', logoutUser)
 export { router}
