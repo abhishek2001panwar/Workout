@@ -4,6 +4,7 @@ import  {router as userRouter}  from "./routes/user.route.js"
 import  {router as buildRouter}  from "./routes/frontrend.routes.js"
 
 import mongoose from "mongoose";
+const path = require('path');
 const app = express();
 
 app.use(express.json());
@@ -25,3 +26,9 @@ mongoose
   .catch((error) => {
     console.log(error.message, " error connecting to database");
   });
+  if (process.env.NODE_ENV === 'production' || "production") {
+    app.use(express.static(path.resolve(__dirname, '../frontend/build')));
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
+    });
+  }
